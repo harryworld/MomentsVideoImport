@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9060" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9532" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9051"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
     </dependencies>
     <objects>
@@ -44,8 +44,20 @@
                                 <action selector="shareButtonPressed:" destination="-1" eventType="touchUpInside" id="Hr5-YG-9Zx"/>
                             </connections>
                         </button>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="jan 2016" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vQ7-gF-BpH">
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ErC-ik-0wd">
+                            <rect key="frame" x="648" y="18" width="21" height="29"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="21" id="fu0-mr-RIW"/>
+                                <constraint firstAttribute="height" constant="29" id="oJU-I1-gsT"/>
+                            </constraints>
+                            <state key="normal" image="upload"/>
+                            <connections>
+                                <action selector="extraButtonPressed:" destination="-1" eventType="touchUpInside" id="vfG-08-mJb"/>
+                            </connections>
+                        </button>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vQ7-gF-BpH" userLabel="Date">
                             <rect key="frame" x="184" y="17" width="368" height="30"/>
+                            <accessibility key="accessibilityConfiguration" label="Current Month"/>
                             <fontDescription key="fontDescription" type="system" pointSize="20"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <nil key="highlightedColor"/>
@@ -53,9 +65,11 @@
                     </subviews>
                     <color key="backgroundColor" red="0.33725490200000002" green="0.32156862749999998" blue="0.27450980390000002" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
+                        <constraint firstItem="ErC-ik-0wd" firstAttribute="centerY" secondItem="014-XX-9kw" secondAttribute="centerY" id="8HA-nE-K6G"/>
                         <constraint firstItem="wvo-2z-JI5" firstAttribute="centerY" secondItem="014-XX-9kw" secondAttribute="centerY" id="AbY-2h-9qo"/>
                         <constraint firstItem="wvo-2z-JI5" firstAttribute="leading" secondItem="014-XX-9kw" secondAttribute="leading" constant="10" id="Ecc-2m-I42"/>
                         <constraint firstItem="Lv4-e3-6r9" firstAttribute="centerY" secondItem="014-XX-9kw" secondAttribute="centerY" id="EpH-mb-lef"/>
+                        <constraint firstItem="Lv4-e3-6r9" firstAttribute="leading" secondItem="ErC-ik-0wd" secondAttribute="trailing" constant="20" id="MGX-RT-UXf"/>
                         <constraint firstItem="vQ7-gF-BpH" firstAttribute="centerX" secondItem="014-XX-9kw" secondAttribute="centerX" id="a9x-D2-f8P"/>
                         <constraint firstItem="vQ7-gF-BpH" firstAttribute="height" secondItem="014-XX-9kw" secondAttribute="height" multiplier="0.468" id="aX2-5S-7l1"/>
                         <constraint firstAttribute="trailing" secondItem="Lv4-e3-6r9" secondAttribute="trailing" constant="26" id="cV3-Ic-18Y"/>

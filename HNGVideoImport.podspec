@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "HNGVideoImport"
-  s.version          = "0.1.0"
+  s.version          = "0.0.0"
   s.summary          = "This libaray import videos from photo app"
 
 # This description is used to generate tags and improve search results.
@@ -31,7 +31,7 @@ Pod::Spec.new do |s|
   s.requires_arc = true
   s.ios.deployment_target = '8.0'
   s.source_files = 'Pod/Classes/*.*'
-  s.resources = ["Pod/Assets/*.png","Pod/Classes/*.xib"]
+  s.resources = ["Pod/Assets/*.xcassets","Pod/Classes/*.xib"]
   s.resource_bundles = {
     'HNGVideoImport' => ['Pod/Assets/*.png']
   }

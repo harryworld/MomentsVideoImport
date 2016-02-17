@@ -9,9 +9,11 @@
 import UIKit
 import Photos
 
-public protocol HNGVideoImportViewControllerDelegate {
-    func videoControllerDidFinishPicking(videoImportController:HNGVideoImportViewController , videoArry:[PHAsset])
+@objc public protocol HNGVideoImportViewControllerDelegate {
+    func videoControllerDidFinishPicking(videoImportController: HNGVideoImportViewController , videoArray: [PHAsset])
+    optional func videoControllerExtraButtonPressed(videoImportController: HNGVideoImportViewController)
 }
+
 public class HNGVideoImportViewController: UIViewController {
 
     var delegate:HNGVideoImportViewControllerDelegate?
@@ -46,7 +48,6 @@ public class HNGVideoImportViewController: UIViewController {
         videoCollectionView.registerNib(supplementaryViewNib, forSupplementaryViewOfKind:UICollectionElementKindSectionHeader, withReuseIdentifier: HNGConstants.VedioSupplementaryViewIndentifer)
         videoCollectionViewLayout.headerReferenceSize = CGSizeMake(videoCollectionView.frame.size.width,40)
         setAudioOutPutPort()
-        loadViewAssetsFromGallery()
     }
     override public func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
@@ -56,6 +57,7 @@ public class HNGVideoImportViewController: UIViewController {
     override public func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
 
+        loadViewAssetsFromGallery()
     }
 
     override public func didReceiveMemoryWarning() {
@@ -70,13 +72,18 @@ public class HNGVideoImportViewController: UIViewController {
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
+    @IBAction func extraButtonPressed(sender: AnyObject) {
+        self.dismissViewControllerAnimated(true) {
+            self.delegate?.videoControllerExtraButtonPressed?(self)
+        }
+    }
     
     @IBAction func shareButtonPressed(sender: AnyObject) {
         
         let phAssets = getVideoPHAssetsFromVideoBOList(self.itemsToBeShared)
-        delegate?.videoControllerDidFinishPicking(self, videoArry: phAssets)
-            self.dismissViewControllerAnimated(true, completion:{()-> Void in
-        })
+        self.dismissViewControllerAnimated(true) {
+            self.delegate?.videoControllerDidFinishPicking(self, videoArray: phAssets)
+        }
     }
     
     
@@ -333,7 +340,6 @@ public class HNGVideoImportViewController: UIViewController {
     // MARK: - destructor
     
      deinit{
-        print("deinit")
         HNGImageCachingManager.chache.resetCachedAssets()
         galleryVideosDic.removeAll()
         videoSectionTitles.removeAll(keepCapacity: false)

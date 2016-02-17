@@ -236,9 +236,6 @@ class VideoCollectionViewCell: UICollectionViewCell {
 
     }
     deinit{
-        
-        print("deinit Cell")
-
         let currentContext = UnsafeMutablePointer<()>()
         videoPlayer?.removeObserver(self, forKeyPath:"rate", context: currentContext)
         //NSNotificationCenter.defaultCenter().removeObserver(self, name:AVPlayerItemDidPlayToEndTimeNotification, object:nil)
