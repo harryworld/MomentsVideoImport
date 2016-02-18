@@ -109,7 +109,7 @@ public class HNGVideoImportViewController: UIViewController {
         var assets : Array<PHAsset> = []
         for videoOBJ in list {
             if let pAsset = videoOBJ.videoAsset {
-                assets.append(pAsset)
+                assets.append(pAsset.copy() as! PHAsset)
             }
         }
         return assets
@@ -151,7 +151,8 @@ public class HNGVideoImportViewController: UIViewController {
         //let assetsFetchResult : PHFetchResult = PHAsset.fetchAssetsInAssetCollection(videocollection, options: nil)
         let videoOptions : PHFetchOptions = PHFetchOptions()
         videoOptions.sortDescriptors = [NSSortDescriptor(key:"creationDate" , ascending:false)]
-        videoOptions.predicate = NSPredicate(format: "mediaType = %d", PHAssetMediaType.Video.rawValue)
+        //videoOptions.predicate = NSPredicate(format: "mediaType = %d", PHAssetMediaType.Video.rawValue)
+        videoOptions.predicate = NSPredicate(format: "mediaType = %d and creationDate > %@", PHAssetMediaType.Video.rawValue, NSDate(timeIntervalSinceNow: -2*24*60*60))
         let assetsFetchResult : PHFetchResult = PHAsset.fetchAssetsWithOptions(videoOptions)
         galleryVideosDic  = groupByVideos(assetsFetchResult)
         videoCollectionView.reloadData()
