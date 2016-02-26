@@ -161,14 +161,23 @@ class VideoCollectionViewCell: UICollectionViewCell {
         weak var wSelf = self
         let cache = HNGImageCachingManager.chache
         if let asset = cache.fetchedAssetsCache?[videoAsset.localIdentifier] {
-            wSelf?.performSelectorOnMainThread(Selector("setMediaPlayer:"), withObject: asset, waitUntilDone: true)
+            //wSelf?.performSelectorOnMainThread(Selector("setMediaPlayer:"), withObject: asset, waitUntilDone: false)
+            dispatch_async(dispatch_get_main_queue()) {
+                // update some UI
+                wSelf?.setMediaPlayer(asset)
+            }
         }else{
             
             cache.requestAVAssetForVideo(videoAsset, options:nil, resultHandler:{(avAsset:AVAsset?,audioMix:AVAudioMix?,info:Dictionary<NSObject,AnyObject>?)->Void in
                 
                 if let asset = avAsset {
                     cache.fetchedAssetsCache?[videoAsset.localIdentifier] = asset
-                    wSelf?.performSelectorOnMainThread(Selector("setMediaPlayer:"), withObject: asset, waitUntilDone: true)
+                    dispatch_async(dispatch_get_main_queue()) {
+                        // update some UI
+                        wSelf?.setMediaPlayer(asset)
+                    }
+                    //wSelf?.performSelectorOnMainThread(Selector("setMediaPlayer:"), withObject: asset, waitUntilDone: false)
+
                     
                 }
                 

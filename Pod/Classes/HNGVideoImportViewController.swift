@@ -46,10 +46,10 @@ public class HNGVideoImportViewController: UIViewController {
         videoCollectionView.registerNib(supplementaryViewNib, forSupplementaryViewOfKind:UICollectionElementKindSectionHeader, withReuseIdentifier: HNGConstants.VedioSupplementaryViewIndentifer)
         videoCollectionViewLayout.headerReferenceSize = CGSizeMake(videoCollectionView.frame.size.width,40)
         setAudioOutPutPort()
-        loadViewAssetsFromGallery()
     }
     override public func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        loadViewAssetsFromGallery()
         let value = UIInterfaceOrientation.LandscapeLeft.rawValue
         UIDevice.currentDevice().setValue(value, forKey: "orientation")
     }
