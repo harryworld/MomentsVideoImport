@@ -9,9 +9,11 @@
 import UIKit
 import Photos
 
-public protocol HNGVideoImportViewControllerDelegate {
-    func videoControllerDidFinishPicking(videoImportController:HNGVideoImportViewController , videoArry:[PHAsset])
+@objc public protocol HNGVideoImportViewControllerDelegate {
+    func videoControllerDidFinishPicking(videoImportController: HNGVideoImportViewController , videoArray: [PHAsset])
+    optional func videoControllerExtraButtonPressed(videoImportController: HNGVideoImportViewController)
 }
+
 public class HNGVideoImportViewController: UIViewController {
 
     var delegate:HNGVideoImportViewControllerDelegate?
@@ -56,6 +58,7 @@ public class HNGVideoImportViewController: UIViewController {
     override public func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
 
+        loadViewAssetsFromGallery()
     }
 
     override public func didReceiveMemoryWarning() {
@@ -70,13 +73,18 @@ public class HNGVideoImportViewController: UIViewController {
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
+    @IBAction func extraButtonPressed(sender: AnyObject) {
+        self.dismissViewControllerAnimated(true) {
+            self.delegate?.videoControllerExtraButtonPressed?(self)
+        }
+    }
     
     @IBAction func shareButtonPressed(sender: AnyObject) {
         
         let phAssets = getVideoPHAssetsFromVideoBOList(self.itemsToBeShared)
-        delegate?.videoControllerDidFinishPicking(self, videoArry: phAssets)
-            self.dismissViewControllerAnimated(true, completion:{()-> Void in
-        })
+        self.dismissViewControllerAnimated(true) {
+            self.delegate?.videoControllerDidFinishPicking(self, videoArray: phAssets)
+        }
     }
     
     
@@ -102,7 +110,7 @@ public class HNGVideoImportViewController: UIViewController {
         var assets : Array<PHAsset> = []
         for videoOBJ in list {
             if let pAsset = videoOBJ.videoAsset {
-                assets.append(pAsset)
+                assets.append(pAsset.copy() as! PHAsset)
             }
         }
         return assets
@@ -144,7 +152,8 @@ public class HNGVideoImportViewController: UIViewController {
         //let assetsFetchResult : PHFetchResult = PHAsset.fetchAssetsInAssetCollection(videocollection, options: nil)
         let videoOptions : PHFetchOptions = PHFetchOptions()
         videoOptions.sortDescriptors = [NSSortDescriptor(key:"creationDate" , ascending:false)]
-        videoOptions.predicate = NSPredicate(format: "mediaType = %d", PHAssetMediaType.Video.rawValue)
+        //videoOptions.predicate = NSPredicate(format: "mediaType = %d", PHAssetMediaType.Video.rawValue)
+        videoOptions.predicate = NSPredicate(format: "mediaType = %d and creationDate > %@", PHAssetMediaType.Video.rawValue, NSDate(timeIntervalSinceNow: -2*24*60*60))
         let assetsFetchResult : PHFetchResult = PHAsset.fetchAssetsWithOptions(videoOptions)
         galleryVideosDic  = groupByVideos(assetsFetchResult)
         videoCollectionView.reloadData()
@@ -333,7 +342,6 @@ public class HNGVideoImportViewController: UIViewController {
     // MARK: - destructor
     
      deinit{
-        print("deinit")
         HNGImageCachingManager.chache.resetCachedAssets()
         galleryVideosDic.removeAll()
         videoSectionTitles.removeAll(keepCapacity: false)
