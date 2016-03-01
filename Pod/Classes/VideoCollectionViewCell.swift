@@ -241,13 +241,11 @@ class VideoCollectionViewCell: UICollectionViewCell {
         volumeButton.selected = false
         playVolumeImageView.hidden = true
         pauseVolumeImageView.hidden = false
-        //NSNotificationCenter.defaultCenter().removeObserver(self, name:AVPlayerItemDidPlayToEndTimeNotification, object:nil)
 
     }
     deinit{
         let currentContext = UnsafeMutablePointer<()>()
         videoPlayer?.removeObserver(self, forKeyPath:"rate", context: currentContext)
-        //NSNotificationCenter.defaultCenter().removeObserver(self, name:AVPlayerItemDidPlayToEndTimeNotification, object:nil)
         videoPlayer?.pause()
         videoPlayer = nil
     }

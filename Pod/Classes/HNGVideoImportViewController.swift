@@ -48,17 +48,22 @@ public class HNGVideoImportViewController: UIViewController {
         videoCollectionView.registerNib(supplementaryViewNib, forSupplementaryViewOfKind:UICollectionElementKindSectionHeader, withReuseIdentifier: HNGConstants.VedioSupplementaryViewIndentifer)
         videoCollectionViewLayout.headerReferenceSize = CGSizeMake(videoCollectionView.frame.size.width,40)
         setAudioOutPutPort()
+
+
     }
     override public func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        loadViewAssetsFromGallery()
         let value = UIInterfaceOrientation.LandscapeLeft.rawValue
         UIDevice.currentDevice().setValue(value, forKey: "orientation")
+
     }
     override public func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
+        addSpinner()
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),{
+            self.loadViewAssetsFromGallery()
+        })
 
-        loadViewAssetsFromGallery()
     }
 
     override public func didReceiveMemoryWarning() {
@@ -89,6 +94,20 @@ public class HNGVideoImportViewController: UIViewController {
     
     
     // MARK: - Private Mehtods
+    
+    private func addSpinner(){
+        let indicator : UIActivityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
+        indicator.center = self.view.center
+        indicator.tag =  HNGConstants.spinnerTag
+        self.view.addSubview(indicator)
+        indicator.startAnimating()
+    }
+    private func removeSpinner(){
+        if let indicator = self.view.viewWithTag(HNGConstants.spinnerTag){
+            indicator.removeFromSuperview()
+        }
+        
+    }
     
     private func removeSectionVideoFromSharedList(sectionVideos : [VideoBO]){
         for asset in sectionVideos {
@@ -146,17 +165,20 @@ public class HNGVideoImportViewController: UIViewController {
     }
     private func loadViewAssetsFromGallery(){
 
-        
         //let videoAlbum : PHFetchResult = PHAssetCollection.fetchAssetCollectionsWithType(PHAssetCollectionType.SmartAlbum, subtype:PHAssetCollectionSubtype.SmartAlbumVideos, options:nil)
         //let videocollection : PHAssetCollection  = videoAlbum[0] as! PHAssetCollection
         //let assetsFetchResult : PHFetchResult = PHAsset.fetchAssetsInAssetCollection(videocollection, options: nil)
         let videoOptions : PHFetchOptions = PHFetchOptions()
         videoOptions.sortDescriptors = [NSSortDescriptor(key:"creationDate" , ascending:false)]
-        //videoOptions.predicate = NSPredicate(format: "mediaType = %d", PHAssetMediaType.Video.rawValue)
-        videoOptions.predicate = NSPredicate(format: "mediaType = %d and creationDate > %@", PHAssetMediaType.Video.rawValue, NSDate(timeIntervalSinceNow: -2*24*60*60))
+        videoOptions.predicate = NSPredicate(format: "mediaType = %d", PHAssetMediaType.Video.rawValue)
+       // videoOptions.predicate = NSPredicate(format: "mediaType = %d and creationDate > %@", PHAssetMediaType.Video.rawValue, NSDate(timeIntervalSinceNow: -2*24*60*60))
         let assetsFetchResult : PHFetchResult = PHAsset.fetchAssetsWithOptions(videoOptions)
         galleryVideosDic  = groupByVideos(assetsFetchResult)
-        videoCollectionView.reloadData()
+        dispatch_async(dispatch_get_main_queue()) {
+            self.videoCollectionView.reloadData()
+            self.removeSpinner()
+        
+        }
     }
     private func groupByVideos(videoList : PHFetchResult)-> Dictionary<String,Array<VideoBO>>{
     

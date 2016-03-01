@@ -20,6 +20,8 @@ struct HNGConstants {
 
     
     static let referanceWidthForIPhones = 736.0 as CGFloat // widht of iPhone 6+ in landscape
+    
+    static let spinnerTag = 1025 as Int
 
 
 }
